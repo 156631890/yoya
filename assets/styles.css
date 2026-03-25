@@ -155,6 +155,13 @@ h4 { font-size: clamp(1rem, 1.3vw, 1.15rem); }
   font-size: 1.6rem;
   margin-right: 0.35rem;
 }
+.home-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
+  gap: 1.5rem 2rem;
+  align-items: end;
+  margin-bottom: 1.5rem;
+}
 .home-hero__copy h1 {
   max-width: 11.5ch;
   font-size: clamp(2.3rem, 3.8vw, 3.9rem);
@@ -286,7 +293,26 @@ h4 { font-size: clamp(1rem, 1.3vw, 1.15rem); }
 .home-capability-card {
   min-height: 100%;
 }
+.home-capability-list {
+  display: grid;
+  gap: 1rem;
+}
+.home-capability-row {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);
+  gap: 1.2rem 2rem;
+  align-items: center;
+  padding: 1.5rem 1.6rem;
+}
+.home-capability-row .eyebrow {
+  margin-bottom: 0.45rem;
+}
 .home-strengths {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+.home-strength-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
@@ -296,6 +322,19 @@ h4 { font-size: clamp(1rem, 1.3vw, 1.15rem); }
 }
 .home-strength strong {
   font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+.home-strength-card {
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+.home-strength-card strong {
+  display: block;
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  margin-bottom: 0.4rem;
+}
+.home-strength-card span {
+  color: var(--muted);
+  font-weight: 700;
 }
 .hero-card, .card, .faq-item, .spec-table, .cta-panel, .quote-box, .metric-card, .form-panel {
   background: rgba(255, 253, 249, 0.84);
@@ -701,9 +740,12 @@ textarea { min-height: 140px; resize: vertical; }
   .hero-grid, .story-grid, .faq-grid, .cta-panel, .grid-4, .footer-grid, .catalog-layout { grid-template-columns: 1fr; }
   .grid-3, .feature-grid, .grid-2, .split-grid, .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .home-hero__grid,
-  .home-hero__stats { grid-template-columns: 1fr; }
+  .home-hero__stats,
+  .home-intro,
+  .home-capability-row { grid-template-columns: 1fr; }
   .home-trustbar,
-  .home-strengths { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-strengths,
+  .home-strength-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .home-hero__panel {
     min-height: 560px;
   }
@@ -733,7 +775,8 @@ textarea { min-height: 140px; resize: vertical; }
   .grid-3, .feature-grid, .grid-2, .split-grid, .stats { grid-template-columns: 1fr; }
   .hero-image { min-height: 420px; }
   .home-trustbar,
-  .home-strengths { grid-template-columns: 1fr; }
+  .home-strengths,
+  .home-strength-grid { grid-template-columns: 1fr; }
   .home-hero__panel {
     min-height: 500px;
     padding: 1rem;

@@ -368,9 +368,9 @@ hero_gallery = "".join(
     for img in hero_product["images"][:4]
 )
 home_stat_cards = [
-    ("Catalog Entries", str(len(products)), "Filtered product pages currently live in the site catalog."),
-    ("Top Category", top_categories[0][0], f"{top_categories[0][1]} listed products currently lead the assortment."),
-    ("Equipment", "400+", "Imported professional machines supporting factory-scale output."),
+    ("Factory Space", "10,000+ sq.m", "Production footprint in Yiwu Yinan Industrial Zone."),
+    ("Qualified Staff", "400+", "Imported equipment and experienced production support."),
+    ("Monthly Focus", f"{len(products)}", "Current filtered product entries presented on the site."),
 ]
 home_stats = "".join(
     f'<article class="metric-card home-stat"><span class="product-stat__label">{html.escape(label)}</span><strong>{html.escape(value)}</strong><span class="muted">{html.escape(note)}</span></article>'
@@ -393,6 +393,44 @@ home_categories = "".join(
 capability_rows = "".join(
     f"<tr><td>{html.escape(category)}</td><td>{count} products</td><td><a class=\"link\" href=\"./catalog.html#category-{html.escape(slugify(category))}\">View category</a></td></tr>"
     for category, count in top_categories
+)
+
+capability_cards = [
+    (
+        "Research & Product Development",
+        "We organize sports bras, jumpsuits, yoga tops, bottoms and coordinated sets into a cleaner B2B assortment that supports fitting, sampling and buyer selection."
+    ),
+    (
+        "Efficient & Stable Manufacturing System",
+        "The company profile highlights more than 400 sets of imported professional equipment, large factory space and an operating model aligned with ISO9000:2000 quality management."
+    ),
+    (
+        "OEM & Private Label Support",
+        "From category direction and sample review to production follow-up, the site is positioned around buyer-facing OEM and wholesale cooperation instead of placeholder corporate copy."
+    ),
+]
+capability_html = "".join(
+    f"""<article class="home-capability-row card">
+      <div>
+        <span class="eyebrow">Our Capabilities</span>
+        <h3>{html.escape(title)}</h3>
+      </div>
+      <p>{html.escape(text)}</p>
+    </article>"""
+    for title, text in capability_cards
+)
+strength_cards = [
+    ("10,000+ sq.m", "Factory Total Floor Space"),
+    ("13,000+ sq.m", "Building Area"),
+    ("400+", "Imported Equipment Base"),
+    (str(len(products)), "Live Product Entries"),
+]
+strength_html = "".join(
+    f"""<article class="metric-card home-strength-card">
+      <strong>{html.escape(value)}</strong>
+      <span>{html.escape(label)}</span>
+    </article>"""
+    for value, label in strength_cards
 )
 
 home_html = f"""<!doctype html>
@@ -423,32 +461,32 @@ home_html = f"""<!doctype html>
         <a class="brand" href="./index.html">Nanjian <span>Hosiery</span></a>
         <nav class="nav" aria-label="Primary">
           <a href="./index.html" aria-current="page">Home</a>
-          <a href="./catalog.html">Catalog</a>
-          <a href="./manufacturing.html">Manufacturing</a>
+          <a href="./catalog.html">Products</a>
+          <a href="./manufacturing.html">Capabilities</a>
           <a href="./sustainability.html">Sustainability</a>
-          <a href="./about.html">About</a>
-          <a href="./faq.html">FAQ</a>
-          <a href="./contact.html">Inquiry</a>
+          <a href="./about.html">About us</a>
+          <a href="./contact.html">Contact us</a>
+          <a href="./faq.html">FAQs</a>
         </nav>
-        <a class="header-cta" href="./contact.html">Contact Factory</a>
+        <a class="header-cta" href="./contact.html">Contact Us</a>
       </div>
     </header>
     <main>
       <section class="page-hero home-hero">
         <div class="container home-hero__grid">
           <div class="home-hero__copy">
-            <span class="eyebrow">Reliable Activewear Manufacturer</span>
-            <p class="home-kicker"><strong>{len(products)}+</strong> live catalog entries</p>
-            <h1>Your Reliable Sportswear and Seamless Apparel Manufacturing Partner in China.</h1>
-            <p class="lead">Yiwu Nanjian Hosiery Co., Ltd. now presents its current product structure around activewear, seamless apparel and private label supply. The homepage follows the live catalog so product emphasis, category counts and factory story stay aligned.</p>
+            <span class="eyebrow">China Sportswear Factory</span>
+            <p class="home-kicker"><strong>{len(products)}</strong> live catalog entries</p>
+            <h1>Sportswear, Seamless Apparel and Factory Supply Built for Wholesale Buyers.</h1>
+            <p class="lead">Yiwu Nanjian Hosiery Co., Ltd. presents a focused catalog of sports bras, jumpsuits, yoga separates, matching sets and men&apos;s sportswear. This homepage brings together current product direction, factory profile and inquiry access so buyers can review the business efficiently.</p>
             <div class="tag-row">
               <span class="tag">OEM and private label support</span>
               <span class="tag">{html.escape(top_categories[0][0])} leads the assortment</span>
-              <span class="tag">Factory and catalog in one site</span>
+              <span class="tag">Factory and catalog in one place</span>
             </div>
             <div class="tag-row">
-              <a class="button primary" href="./catalog.html">Browse Product Catalog</a>
-              <a class="button secondary" href="./contact.html">Request Pricing</a>
+              <a class="button primary" href="./contact.html">Request Quote</a>
+              <a class="button secondary" href="./catalog.html">Browse Categories</a>
             </div>
             <div class="home-hero__stats">
               {home_stats}
@@ -470,11 +508,18 @@ home_html = f"""<!doctype html>
         </div>
       </section>
 
-      <section class="section-tight">
+      <section class="section">
         <div class="container">
+          <div class="home-intro">
+            <div>
+              <span class="eyebrow">Factory Overview</span>
+              <h2>{len(products)} live product entries supported by an established textile manufacturing base.</h2>
+            </div>
+            <p class="lead">This page is written for sourcing teams that need a fast view of category coverage, production scale and contact access without reading through generic company text.</p>
+          </div>
           <div class="home-trustbar">
-            <span>Factory area 10,000㎡+</span>
-            <span>Building area 13,000㎡+</span>
+            <span>Factory area 10,000+ sq.m</span>
+            <span>Building area 13,000+ sq.m</span>
             <span>400+ imported machines</span>
             <span>ISO9000:2000 aligned operation</span>
           </div>
@@ -484,20 +529,9 @@ home_html = f"""<!doctype html>
       <section class="section section-alt">
         <div class="container">
           <span class="eyebrow">Our Capabilities</span>
-          <h2>Development, manufacturing and category execution for activewear buyers.</h2>
-          <div class="grid-3">
-            <article class="card home-capability-card">
-              <h3>Product Development and Category Mapping</h3>
-              <p>We organize jumpsuits, sports bras, yoga tops, leggings, shorts, sets and men&apos;s sportswear into a cleaner product structure for wholesale and sourcing teams.</p>
-            </article>
-            <article class="card home-capability-card">
-              <h3>Efficient and Stable Manufacturing System</h3>
-              <p>The company profile highlights more than 400 sets of imported professional equipment alongside substantial factory and building area to support production scale.</p>
-            </article>
-            <article class="card home-capability-card">
-              <h3>OEM and Private Label Supply Support</h3>
-              <p>From category selection to inquiry handoff, the site is positioned to support buyers looking for factory-backed, customizable sportswear programs.</p>
-            </article>
+          <h2>Development support, factory execution and production follow-through for apparel programs.</h2>
+          <div class="home-capability-list">
+            {capability_html}
           </div>
         </div>
       </section>
@@ -515,24 +549,9 @@ home_html = f"""<!doctype html>
       <section class="section section-alt">
         <div class="container">
           <span class="eyebrow">Strengths</span>
-          <h2>Current product structure and factory signals in one view.</h2>
-          <div class="home-strengths">
-            <article class="metric-card home-strength">
-              <strong>{len(products)}</strong>
-              <span class="muted">filtered product pages currently live</span>
-            </article>
-            <article class="metric-card home-strength">
-              <strong>{top_categories[0][1]}</strong>
-              <span class="muted">{html.escape(top_categories[0][0])} listings currently lead the catalog</span>
-            </article>
-            <article class="metric-card home-strength">
-              <strong>400+</strong>
-              <span class="muted">imported professional machine systems</span>
-            </article>
-            <article class="metric-card home-strength">
-              <strong>10,000㎡+</strong>
-              <span class="muted">factory footprint in Yiwu</span>
-            </article>
+          <h2>Core factory signals and current category structure in one view.</h2>
+          <div class="home-strength-grid">
+            {strength_html}
           </div>
           <div class="spec-table" style="margin-top:1.5rem;">
             <table>
@@ -548,9 +567,9 @@ home_html = f"""<!doctype html>
       <section class="section">
         <div class="container cta-panel">
           <div>
-            <span class="eyebrow">Inquiry Ready</span>
-            <h2>Need a sportswear supplier with active category coverage and factory backing?</h2>
-            <p class="lead">Send the product category, MOQ target, fabric direction and whether you need OEM or private label support. We can align the discussion around the current product structure on this site.</p>
+            <span class="eyebrow">Start Your Inquiry</span>
+            <h2>Need a factory partner for sportswear, seamless products or activewear development?</h2>
+            <p class="lead">Share your target category, expected order volume, fabric direction and whether you need OEM, ODM or private label support. We can continue from the product structure already presented on this site.</p>
           </div>
           <div class="tag-row">
             <a class="button primary" href="./contact.html">Send Inquiry</a>
@@ -564,25 +583,28 @@ home_html = f"""<!doctype html>
         <div class="footer-grid">
           <div>
             <div class="brand">Nanjian <span>Hosiery</span></div>
-            <p class="muted">Independent B2B website focused on activewear categories, seamless apparel and factory capability.</p>
+            <p class="muted">Independent B2B website for Yiwu Nanjian Hosiery Co., Ltd., combining live product categories with factory-oriented sourcing information.</p>
           </div>
           <div>
-            <h3>Catalog</h3>
-            <p><a class="link" href="./catalog.html">Jumpsuits</a></p>
-            <p><a class="link" href="./catalog.html">Sports Bras</a></p>
-            <p><a class="link" href="./catalog.html">Yoga Sets</a></p>
+            <h3>Products</h3>
+            <p><a class="link" href="./catalog.html#category-jumpsuit">Jumpsuits</a></p>
+            <p><a class="link" href="./catalog.html#category-sports-bra">Sports Bras</a></p>
+            <p><a class="link" href="./catalog.html#category-yoga-top">Yoga Tops</a></p>
+            <p><a class="link" href="./catalog.html#category-yoga-set">Yoga Sets</a></p>
           </div>
           <div>
-            <h3>Factory</h3>
-            <p><a class="link" href="./manufacturing.html">Equipment & Capacity</a></p>
-            <p><a class="link" href="./sustainability.html">Quality & Compliance</a></p>
-            <p><a class="link" href="./about.html">Company Overview</a></p>
+            <h3>Capabilities</h3>
+            <p><a class="link" href="./manufacturing.html">Manufacturing</a></p>
+            <p><a class="link" href="./sustainability.html">Sustainability</a></p>
+            <p><a class="link" href="./about.html">About us</a></p>
+            <p><a class="link" href="./faq.html">FAQs</a></p>
           </div>
           <div>
-            <h3>Contact</h3>
+            <h3>Contact us</h3>
             <p class="muted">Yiwu Nanjian Hosiery Co., Ltd.</p>
-            <p class="muted">lorenzhao678@gmail.com</p>
-            <p><a class="link" href="./contact.html">Open inquiry form</a></p>
+            <p class="muted">Yiwu City, Yinan Industrial Zone</p>
+            <p class="muted">Email: lorenzhao678@gmail.com</p>
+            <p><a class="link" href="./contact.html">Send inquiry details</a></p>
           </div>
         </div>
         <div class="footer-note">(c) <span data-year></span> Yiwu Nanjian Hosiery Co., Ltd.</div>
