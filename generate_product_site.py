@@ -214,6 +214,7 @@ if generic_first_images:
 category_counts = {}
 for item in products:
     category_counts[item["category"]] = category_counts.get(item["category"], 0) + 1
+top_categories = sorted(category_counts.items(), key=lambda item: item[1], reverse=True)
 
 (DATA_DIR / "products_clean.json").write_text(json.dumps({"products": products}, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -231,6 +232,19 @@ for old_page in PRODUCTS_DIR.glob("*.html"):
 category_links = "".join(
     f'<a class="catalog-directory__link" href="#category-{slugify(name)}"><span>{html.escape(name)}</span><strong>{count}</strong></a>'
     for name, count in sorted(category_counts.items())
+)
+catalog_hero_product = next((item for item in products if item["images"]), products[0])
+catalog_hero_thumbs = "".join(
+    f'<span class="catalog-hero__mini"><img src="{html.escape(img)}" alt="{html.escape(catalog_hero_product["title"])} preview" /></span>'
+    for img in catalog_hero_product["images"][:4]
+)
+catalog_hero_stats = "".join(
+    f'<article class="metric-card catalog-hero__stat"><span class="product-stat__label">{html.escape(label)}</span><strong>{html.escape(value)}</strong></article>'
+    for label, value in [
+        ("Live Products", str(len(products))),
+        ("Categories", str(len(category_counts))),
+        ("Top Category", top_categories[0][0] if "top_categories" in locals() else ""),
+    ]
 )
 
 cards = []
@@ -317,6 +331,22 @@ catalog_html = f"""<!doctype html>
               <span class="eyebrow">Authorized Imported Product Library</span>
               <h1>Sportswear Products Reworked into the Independent-Site Style.</h1>
               <p class="lead">These products were imported from the authorized Alibaba store and normalized into a cleaner B2B catalog structure for independent-site use.</p>
+              <div class="catalog-hero__stats">
+                {catalog_hero_stats}
+              </div>
+            </div>
+            <div class="catalog-hero__visual">
+              <div class="catalog-hero__panel">
+                <div class="catalog-hero__image-wrap">
+                  <img src="{html.escape(catalog_hero_product['images'][0])}" alt="{html.escape(catalog_hero_product['title'])}" class="catalog-hero__image" />
+                </div>
+                <div class="catalog-hero__floating">
+                  <span class="eyebrow">{html.escape(catalog_hero_product['category'])}</span>
+                  <h3>{html.escape(catalog_hero_product['title'])}</h3>
+                  <p>{html.escape(catalog_hero_product['summary'])}</p>
+                </div>
+                <div class="catalog-hero__thumbs">{catalog_hero_thumbs}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -339,14 +369,58 @@ catalog_html = f"""<!doctype html>
         </div>
       </section>
     </main>
-    <footer class="footer"><div class="container"><div class="footer-note">(c) <span data-year></span> Yiwu Nanjian Hosiery Co., Ltd.</div></div></footer>
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-topline">
+          <div>
+            <span class="eyebrow">Start Your Inquiry</span>
+            <h2>Tell us the category, quantity and branding direction you want to discuss.</h2>
+          </div>
+          <div class="tag-row">
+            <a class="button primary" href="./contact.html">Request Quote</a>
+            <a class="button secondary" href="./contact.html">Contact Factory</a>
+          </div>
+        </div>
+        <div class="footer-grid">
+          <div>
+            <div class="brand">Nanjian <span>Hosiery</span></div>
+            <p class="muted">Independent B2B website for Yiwu Nanjian Hosiery Co., Ltd., combining live product categories with factory-oriented sourcing information.</p>
+            <div class="footer-contact-list">
+              <p><strong>Email:</strong> lorenzhao678@gmail.com</p>
+              <p><strong>Location:</strong> Yiwu City, Yinan Industrial Zone</p>
+              <p><strong>Support:</strong> OEM, ODM and private label inquiries</p>
+            </div>
+          </div>
+          <div>
+            <h3>Products</h3>
+            <p><a class="link" href="./catalog.html#category-jumpsuit">Jumpsuits</a></p>
+            <p><a class="link" href="./catalog.html#category-sports-bra">Sports Bras</a></p>
+            <p><a class="link" href="./catalog.html#category-yoga-top">Yoga Tops</a></p>
+            <p><a class="link" href="./catalog.html#category-yoga-set">Yoga Sets</a></p>
+          </div>
+          <div>
+            <h3>Capabilities</h3>
+            <p><a class="link" href="./manufacturing.html">Manufacturing</a></p>
+            <p><a class="link" href="./sustainability.html">Sustainability</a></p>
+            <p><a class="link" href="./about.html">About us</a></p>
+            <p><a class="link" href="./faq.html">FAQs</a></p>
+          </div>
+          <div>
+            <h3>Inquiry Guide</h3>
+            <p class="muted">Send category, target quantity, materials and logo or packaging needs.</p>
+            <p class="muted">The more specific the inquiry, the more useful the reply will be.</p>
+            <p><a class="link" href="./contact.html">Send inquiry details</a></p>
+          </div>
+        </div>
+        <div class="footer-note">(c) <span data-year></span> Yiwu Nanjian Hosiery Co., Ltd.</div>
+      </div>
+    </footer>
     <script src="./assets/app.js"></script>
   </body>
 </html>"""
 
 (BASE / "catalog.html").write_text(catalog_html, encoding="utf-8")
 
-top_categories = sorted(category_counts.items(), key=lambda item: item[1], reverse=True)
 category_samples = []
 for category_name, count in top_categories[:6]:
     sample = next((item for item in products if item["category"] == category_name and item["images"]), None)
