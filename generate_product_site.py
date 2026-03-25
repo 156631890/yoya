@@ -348,7 +348,7 @@ catalog_html = f"""<!doctype html>
 
 top_categories = sorted(category_counts.items(), key=lambda item: item[1], reverse=True)
 category_samples = []
-for category_name, count in top_categories[:4]:
+for category_name, count in top_categories[:6]:
     sample = next((item for item in products if item["category"] == category_name and item["images"]), None)
     if not sample:
         continue
@@ -394,30 +394,86 @@ capability_rows = "".join(
     f"<tr><td>{html.escape(category)}</td><td>{count} products</td><td><a class=\"link\" href=\"./catalog.html#category-{html.escape(slugify(category))}\">View category</a></td></tr>"
     for category, count in top_categories
 )
-
+factory_metrics = "".join(
+    f'<div class="home-visual-metric"><span>{html.escape(label)}</span><strong>{html.escape(value)}</strong></div>'
+    for label, value in [
+        ("Factory Area", "10,000+ sq.m"),
+        ("Building Area", "13,000+ sq.m"),
+        ("Imported Machines", "400+"),
+    ]
+)
 capability_cards = [
     (
-        "Research & Product Development",
-        "We organize sports bras, jumpsuits, yoga tops, bottoms and coordinated sets into a cleaner B2B assortment that supports fitting, sampling and buyer selection."
+        "Factory Visual",
+        "Structured production base",
+        "10,000+ sq.m manufacturing footprint, 13,000+ sq.m building area and 400+ imported machines presented in a cleaner supplier-review format.",
+        f'<div class="home-visual home-visual--factory">{factory_metrics}</div>',
     ),
     (
-        "Efficient & Stable Manufacturing System",
-        "The company profile highlights more than 400 sets of imported professional equipment, large factory space and an operating model aligned with ISO9000:2000 quality management."
+        "Capability Visual",
+        "Sampling to bulk follow-through",
+        "Development support, specification review, sampling discussion and order execution are presented as one continuous buyer-facing workflow instead of isolated claims.",
+        """<div class="home-visual home-visual--capability">
+          <span class="home-process-chip">Brief</span>
+          <span class="home-process-chip">Sample</span>
+          <span class="home-process-chip">Approval</span>
+          <span class="home-process-chip">Bulk</span>
+        </div>""",
     ),
     (
-        "OEM & Private Label Support",
-        "From category direction and sample review to production follow-up, the site is positioned around buyer-facing OEM and wholesale cooperation instead of placeholder corporate copy."
+        "Product Visual",
+        "Live category-led assortment",
+        "The online assortment is organized around sports bras, jumpsuits, yoga separates, sets and menswear so sourcing teams can evaluate categories faster.",
+        f'<div class="home-visual home-visual--product"><img src="{html.escape(category_samples[0]["image"] if category_samples else hero_product["images"][0])}" alt="{html.escape(category_samples[0]["name"] if category_samples else hero_product["category"])}" /></div>',
     ),
 ]
 capability_html = "".join(
-    f"""<article class="home-capability-row card">
-      <div>
-        <span class="eyebrow">Our Capabilities</span>
+    f"""<article class="home-layer-card card">
+      <div class="home-layer-card__head">
+        <span class="eyebrow">{html.escape(label)}</span>
         <h3>{html.escape(title)}</h3>
       </div>
       <p>{html.escape(text)}</p>
+      {visual}
     </article>"""
-    for title, text in capability_cards
+    for label, title, text, visual in capability_cards
+)
+certification_cards = "".join(
+    f"""<article class="home-proof-card card">
+      <span class="eyebrow">{html.escape(label)}</span>
+      <h3>{html.escape(title)}</h3>
+      <p>{html.escape(text)}</p>
+    </article>"""
+    for label, title, text in [
+        ("Certifications", "Quality-system aligned operations", "The company profile highlights an ISO9000:2000 aligned operating basis, giving buyers a clearer management reference when evaluating supplier stability."),
+        ("Documentation", "Buyer-facing product normalization", "Product titles, categories and detail pages are organized for independent-site use, making the online catalog easier to review and compare."),
+        ("Readiness", "Support for meetings, fairs and sourcing follow-up", "The site is structured so exhibition conversations, online inquiries and sample discussions can continue from the same product and factory information base."),
+    ]
+)
+why_choose_html = "".join(
+    f"""<article class="card home-why-card">
+      <h3>{html.escape(title)}</h3>
+      <p>{html.escape(text)}</p>
+    </article>"""
+    for title, text in [
+        ("Focused activewear assortment", "The catalog is edited around actual categories buyers search for, not an unfocused long list of unrelated textiles."),
+        ("Factory profile with usable numbers", "Space, equipment and system references are surfaced clearly so sourcing teams can assess manufacturing scale faster."),
+        ("OEM and private label discussion ready", "The site is built to move from category review into branding, quantity and sample discussions without detours."),
+        ("More efficient scan paths", "Homepage, catalog and detail pages all prioritize quicker reading, stronger product visibility and fewer low-value content blocks."),
+    ]
+)
+process_html = "".join(
+    f"""<article class="home-process-step card">
+      <span class="home-process-step__num">{index}</span>
+      <h3>{html.escape(title)}</h3>
+      <p>{html.escape(text)}</p>
+    </article>"""
+    for index, (title, text) in enumerate([
+        ("Share your category brief", "Send product type, estimated quantity, target market and whether you need stock support, OEM or private label development."),
+        ("Review references and sampling", "We align on suitable styles, construction direction and next-step sample or product-reference discussion."),
+        ("Confirm production details", "Order quantities, materials, packaging direction and delivery requirements are clarified before bulk execution."),
+        ("Move into follow-through", "After confirmation, the project continues through production coordination and communication based on the agreed scope."),
+    ], start=1)
 )
 strength_cards = [
     ("10,000+ sq.m", "Factory Total Floor Space"),
@@ -528,9 +584,9 @@ home_html = f"""<!doctype html>
 
       <section class="section section-alt">
         <div class="container">
-          <span class="eyebrow">Our Capabilities</span>
-          <h2>Development support, factory execution and production follow-through for apparel programs.</h2>
-          <div class="home-capability-list">
+          <span class="eyebrow">Layered Presentation</span>
+          <h2>Products, factory signals and capability information are separated into clearer visual layers.</h2>
+          <div class="grid-3">
             {capability_html}
           </div>
         </div>
@@ -538,10 +594,40 @@ home_html = f"""<!doctype html>
 
       <section class="section">
         <div class="container">
+          <span class="eyebrow">Certifications and Fair Support</span>
+          <h2>Trust-building information now sits closer to the middle of the homepage, not buried at the end.</h2>
+          <div class="grid-3">
+            {certification_cards}
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt">
+        <div class="container">
           <span class="eyebrow">Our Products</span>
-          <h2>Live category blocks pulled from the current product library.</h2>
-          <div class="grid-4 section-tight">
+          <h2>Category-led entry points built for faster homepage scanning.</h2>
+          <div class="grid-3 section-tight">
             {home_categories}
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-alt">
+        <div class="container">
+          <span class="eyebrow">Why Choose Us</span>
+          <h2>A clearer supplier-positioning layer closer to the reference B2B factory structure.</h2>
+          <div class="grid-2">
+            {why_choose_html}
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <span class="eyebrow">Process</span>
+          <h2>A homepage explanation of how buyers move from inquiry to production.</h2>
+          <div class="grid-4">
+            {process_html}
           </div>
         </div>
       </section>
@@ -580,10 +666,25 @@ home_html = f"""<!doctype html>
     </main>
     <footer class="footer">
       <div class="container">
+        <div class="footer-topline">
+          <div>
+            <span class="eyebrow">Start Your Inquiry</span>
+            <h2>Tell us the category, quantity and branding direction you want to discuss.</h2>
+          </div>
+          <div class="tag-row">
+            <a class="button primary" href="./contact.html">Request Quote</a>
+            <a class="button secondary" href="./catalog.html">View Catalog</a>
+          </div>
+        </div>
         <div class="footer-grid">
           <div>
             <div class="brand">Nanjian <span>Hosiery</span></div>
             <p class="muted">Independent B2B website for Yiwu Nanjian Hosiery Co., Ltd., combining live product categories with factory-oriented sourcing information.</p>
+            <div class="footer-contact-list">
+              <p><strong>Email:</strong> lorenzhao678@gmail.com</p>
+              <p><strong>Location:</strong> Yiwu City, Yinan Industrial Zone</p>
+              <p><strong>Support:</strong> OEM, ODM and private label inquiries</p>
+            </div>
           </div>
           <div>
             <h3>Products</h3>
@@ -600,10 +701,9 @@ home_html = f"""<!doctype html>
             <p><a class="link" href="./faq.html">FAQs</a></p>
           </div>
           <div>
-            <h3>Contact us</h3>
-            <p class="muted">Yiwu Nanjian Hosiery Co., Ltd.</p>
-            <p class="muted">Yiwu City, Yinan Industrial Zone</p>
-            <p class="muted">Email: lorenzhao678@gmail.com</p>
+            <h3>Inquiry Guide</h3>
+            <p class="muted">Send category, target quantity, materials and logo or packaging needs.</p>
+            <p class="muted">The more specific the inquiry, the more useful the reply will be.</p>
             <p><a class="link" href="./contact.html">Send inquiry details</a></p>
           </div>
         </div>
