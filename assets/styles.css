@@ -900,6 +900,74 @@ th, td { text-align: left; padding: 1rem 1.15rem; font-size: 0.94rem; }
 thead { background: rgba(13, 76, 115, 0.08); }
 tbody tr:nth-child(even) { background: rgba(236, 231, 222, 0.42); }
 .faq-grid { grid-template-columns: 0.9fr 1.1fr; align-items: start; }
+.faq-hero__copy {
+  max-width: 760px;
+}
+.faq-hero__eyebrow {
+  margin-bottom: 0.7rem;
+  letter-spacing: 0.16em;
+  font-size: 0.8rem;
+}
+.faq-hero__title {
+  max-width: 14ch;
+  margin-bottom: 0.9rem;
+  font-size: clamp(2.9rem, 4.8vw, 4.9rem);
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+.faq-hero__copy .lead {
+  max-width: 50ch;
+  font-size: 1.1rem;
+  line-height: 1.72;
+}
+.about-hero__copy,
+.manufacturing-hero__copy,
+.sustainability-hero__copy,
+.contact-hero__copy {
+  max-width: 760px;
+}
+.about-hero__eyebrow,
+.manufacturing-hero__eyebrow,
+.sustainability-hero__eyebrow,
+.contact-hero__eyebrow {
+  margin-bottom: 0.7rem;
+  letter-spacing: 0.16em;
+  font-size: 0.8rem;
+}
+.about-hero__title,
+.manufacturing-hero__title,
+.sustainability-hero__title,
+.contact-hero__title {
+  margin-bottom: 0.9rem;
+  line-height: 0.94;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+.about-hero__title {
+  max-width: 13ch;
+  font-size: clamp(2.9rem, 4.8vw, 4.9rem);
+}
+.manufacturing-hero__title {
+  max-width: 12ch;
+  font-size: clamp(2.8rem, 4.5vw, 4.6rem);
+}
+.sustainability-hero__title {
+  max-width: 13ch;
+  font-size: clamp(2.75rem, 4.4vw, 4.4rem);
+}
+.contact-hero__title {
+  max-width: 14ch;
+  font-size: clamp(2.7rem, 4.3vw, 4.3rem);
+}
+.about-hero__copy .lead,
+.manufacturing-hero__copy .lead,
+.sustainability-hero__copy .lead,
+.contact-hero__copy .lead {
+  max-width: 50ch;
+  font-size: 1.1rem;
+  line-height: 1.72;
+}
 .faq-item { padding: 0; overflow: hidden; }
 .faq-question {
   width: 100%;

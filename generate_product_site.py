@@ -12,6 +12,7 @@ BASE = Path(__file__).parent
 SOURCE = BASE / "mcduii_products.json"
 DATA_DIR = BASE / "data"
 PRODUCTS_DIR = BASE / "products"
+SITE_URL = "https://www.nanjianhosiery.com"
 DATA_DIR.mkdir(exist_ok=True)
 PRODUCTS_DIR.mkdir(exist_ok=True)
 
@@ -123,10 +124,16 @@ def make_bullets(title: str, category: str, price: str) -> list[str]:
     return bullets[:5]
 
 
-def page_shell(title: str, description: str, body: str, current: str = "") -> str:
+def json_ld(data: dict) -> str:
+    return json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+
+
+def page_shell(title: str, description: str, body: str, current: str = "", canonical_path: str = "", image_url: str = "", schema: dict | None = None) -> str:
     nav = {name: "" for name in ["home", "catalog", "manufacturing", "sustainability", "about", "faq", "contact"]}
     if current:
         nav[current] = ' aria-current="page"'
+    canonical = f"{SITE_URL}{canonical_path}" if canonical_path else SITE_URL
+    schema_block = f'\n    <script type="application/ld+json">{json_ld(schema)}</script>' if schema else ""
     return f"""<!doctype html>
 <html lang="en">
   <head>
@@ -135,6 +142,16 @@ def page_shell(title: str, description: str, body: str, current: str = "") -> st
     <title>{html.escape(title)}</title>
     <meta name="description" content="{html.escape(description)}" />
     <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="canonical" href="{html.escape(canonical)}" />
+    <meta property="og:type" content="product" />
+    <meta property="og:title" content="{html.escape(title)}" />
+    <meta property="og:description" content="{html.escape(description)}" />
+    <meta property="og:url" content="{html.escape(canonical)}" />
+    <meta property="og:image" content="{html.escape(image_url)}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{html.escape(title)}" />
+    <meta name="twitter:description" content="{html.escape(description)}" />
+    <meta name="twitter:image" content="{html.escape(image_url)}" />{schema_block}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
@@ -301,6 +318,23 @@ catalog_html = f"""<!doctype html>
     <meta name="description" content="Imported product library based on the authorized Alibaba store, rewritten into the website style for independent-site presentation." />
     <meta name="robots" content="index,follow,max-image-preview:large" />
     <link rel="canonical" href="https://www.nanjianhosiery.com/catalog.html" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nanjian Hosiery | Sportswear Product Catalog" />
+    <meta property="og:description" content="Browse the current sportswear product catalog and category directory for Yiwu Nanjian Hosiery Co., Ltd." />
+    <meta property="og:url" content="https://www.nanjianhosiery.com/catalog.html" />
+    <meta property="og:image" content="{html.escape(catalog_hero_product['images'][0])}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Nanjian Hosiery | Sportswear Product Catalog" />
+    <meta name="twitter:description" content="Browse the current sportswear product catalog and category directory for Yiwu Nanjian Hosiery Co., Ltd." />
+    <meta name="twitter:image" content="{html.escape(catalog_hero_product['images'][0])}" />
+    <script type="application/ld+json">{json_ld({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Sportswear Product Catalog",
+        "url": f"{SITE_URL}/catalog.html",
+        "description": "Current sportswear product catalog for Yiwu Nanjian Hosiery Co., Ltd.",
+        "isPartOf": {"@type": "WebSite", "name": "Nanjian Hosiery", "url": SITE_URL}
+    })}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
@@ -580,6 +614,32 @@ home_html = f"""<!doctype html>
     <meta property="og:description" content="Browse the current sportswear product directory and factory capability profile for Yiwu Nanjian Hosiery Co., Ltd." />
     <meta property="og:url" content="https://www.nanjianhosiery.com/" />
     <meta property="og:image" content="{html.escape(hero_product['images'][0])}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Nanjian Hosiery | Activewear and Manufacturing Directory" />
+    <meta name="twitter:description" content="Browse the current sportswear product directory and factory capability profile for Yiwu Nanjian Hosiery Co., Ltd." />
+    <meta name="twitter:image" content="{html.escape(hero_product['images'][0])}" />
+    <script type="application/ld+json">{json_ld({
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Yiwu Nanjian Hosiery Co., Ltd.",
+        "url": SITE_URL,
+        "email": "lorenzhao678@gmail.com",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Yiwu City",
+            "addressRegion": "Zhejiang",
+            "streetAddress": "Yinan Industrial Zone",
+            "addressCountry": "CN"
+        },
+        "brand": [{"@type": "Brand", "name": "Nanjian"}, {"@type": "Brand", "name": "Limeiqun"}]
+    })}</script>
+    <script type="application/ld+json">{json_ld({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Nanjian Hosiery",
+        "url": SITE_URL,
+        "publisher": {"@type": "Organization", "name": "Yiwu Nanjian Hosiery Co., Ltd."}
+    })}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
@@ -859,7 +919,88 @@ for product in products:
         </div>
       </section>
     </main>"""
-    page = page_shell(f"{product['title']} | Nanjian Hosiery Product Detail", product["summary"], body, current="catalog")
+    product_path = f"/products/{product['slug']}.html"
+    offer_price = product["price"].replace("$", "").split("-")[0] if "$" in product["price"] else ""
+    product_schema = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": product["title"],
+        "description": product["summary"],
+        "image": product["images"],
+        "category": product["category"],
+        "brand": {"@type": "Brand", "name": "Nanjian Hosiery"},
+        "offers": {
+            "@type": "Offer",
+            "priceCurrency": "USD",
+            "price": offer_price,
+            "availability": "https://schema.org/InStock",
+            "url": f"{SITE_URL}{product_path}",
+        },
+    }
+    page = page_shell(
+        f"{product['title']} | Nanjian Hosiery Product Detail",
+        product["summary"],
+        body,
+        current="catalog",
+        canonical_path=product_path,
+        image_url=product["images"][0],
+        schema=product_schema,
+    )
     (PRODUCTS_DIR / f"{product['slug']}.html").write_text(page, encoding="utf-8")
+
+(BASE / "sitemap.xml").write_text(
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
+    + "\n".join(
+        [f"  <url><loc>{SITE_URL}/</loc></url>",
+         f"  <url><loc>{SITE_URL}/catalog.html</loc></url>",
+         f"  <url><loc>{SITE_URL}/manufacturing.html</loc></url>",
+         f"  <url><loc>{SITE_URL}/sustainability.html</loc></url>",
+         f"  <url><loc>{SITE_URL}/about.html</loc></url>",
+         f"  <url><loc>{SITE_URL}/faq.html</loc></url>",
+         f"  <url><loc>{SITE_URL}/contact.html</loc></url>"]
+        + [f"  <url><loc>{SITE_URL}/products/{item['slug']}.html</loc></url>" for item in products]
+    )
+    + "\n</urlset>\n",
+    encoding="utf-8",
+)
+
+(BASE / "llms.txt").write_text(
+    f"""# Yiwu Nanjian Hosiery Co., Ltd.
+
+Yiwu Nanjian Hosiery Co., Ltd. is an activewear, seamless apparel and hosiery manufacturer located in Yiwu City, Yinan Industrial Zone, China.
+
+## What we make
+- Sports bras
+- Jumpsuits
+- Yoga tops
+- Yoga leggings
+- Yoga shorts
+- Yoga sets
+- Menswear activewear
+- Seamless apparel and hosiery
+
+## Buyer facts
+- Factory area: 10,000+ sq.m
+- Building area: 13,000+ sq.m
+- Equipment: 400+ imported professional machines
+- Quality system: operates according to an ISO9000:2000 aligned management system
+- Contact email: lorenzhao678@gmail.com
+- Brands: Nanjian and Limeiqun
+- Live product entries on site: {len(products)}
+
+## Key pages
+- Home: {SITE_URL}/
+- Catalog: {SITE_URL}/catalog.html
+- Manufacturing: {SITE_URL}/manufacturing.html
+- Sustainability: {SITE_URL}/sustainability.html
+- About us: {SITE_URL}/about.html
+- FAQs: {SITE_URL}/faq.html
+- Contact us: {SITE_URL}/contact.html
+
+## GEO summary
+This website is written for wholesale buyers, sourcing teams, importers and private label brands looking for activewear, seamless apparel and factory supply information. Priority topics are category coverage, factory capability, inquiry readiness, manufacturing scale and contact access.
+""",
+    encoding="utf-8",
+)
 
 print(f"Generated {len(products)} products, catalog page, and detail pages in {PRODUCTS_DIR}")
